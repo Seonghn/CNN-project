@@ -22,7 +22,7 @@ def canny(src, low_t, high_t):
 
 def ROI(src, vert):
     mask = np.zeros_like(src)
-    print(src.shape)
+    # print(src.shape)
 
     if len(src.shape) > 2:
         channel = src.shape[2]
@@ -63,7 +63,7 @@ while (True):
     roi = ROI(dst, vert)
 
     ccan = cv2.cvtColor(roi, cv2.COLOR_GRAY2BGR)
-    linesP = cv2.HoughLinesP(roi, 1, np.pi / 180, 50, None, 50, 30) #hough line 출력
+    linesP = cv2.HoughLinesP(roi, 1, np.pi / 180, 50, None, 150, 50) #hough line 출력
     if linesP is not None:
         for i in range(0, len(linesP)):
             l = linesP[i][0]
@@ -72,6 +72,41 @@ while (True):
     cv2.imshow("original", ccan)
     detected = weighted(ccan, src)
     cv2.imshow('detect', detected)
+    if linesP is not None:
+        left = []
+        right = []
+        for i in range(0,len(linesP)):
+            if linesP[i][0][0] < 320:
+                left.append(linesP[i][0][0])
+            else:
+                right.append(linesP[i][0][0])
+        left = sorted(left, reverse=True)
+        right = sorted(right, reverse=False)
+
+        # print(right)
+
+        near_l = -1
+        near_r = -1
+
+        if len(left) == 0:
+            if len(right) == 0:
+                pass
+            else:
+                near_r = right[0]
+        elif len(right) == 0:
+            if len(left) == 0:
+                pass
+            else:
+                near_l = left[0]
+        else:
+            near_l = left[0]
+            near_r = right[0]
+
+
+        print(near_l, near_r)
+
+    # plt.imshow(np.zeros_like(src))
+    # plt.show()
 
     # linesP = cv2.HoughLinesP(roi, 1, np.pi / 180, 50, None, 50, 10)
     # if linesP is not None:
