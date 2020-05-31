@@ -30,6 +30,39 @@ while (cap.isOpened()):
     mimg = cv2.addWeighted(src, 1.0, ccan, 1.0, 0.0)
     cv2.imshow("original", src)
     cv2.imshow('Detect Lines',mimg)
+    if linesP is not None:
+        left = []
+        right = []
+        for i in range(0,len(linesP)):
+            if linesP[i][0][0] < 320:
+                left.append(linesP[i][0][0])
+            else:
+                right.append(linesP[i][0][0])
+        left = sorted(left, reverse=True)
+        right = sorted(right, reverse=False)
+
+        # print(right)
+
+        near_l = -1
+        near_r = -1
+
+        if len(left) == 0:
+            if len(right) == 0:
+                pass
+            else:
+                near_r = right[0]
+        elif len(right) == 0:
+            if len(left) == 0:
+                pass
+            else:
+                near_l = left[0]
+        else:
+            near_l = left[0]
+            near_r = right[0]
+
+
+        print(near_l, near_r)
+
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
