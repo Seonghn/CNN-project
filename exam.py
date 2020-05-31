@@ -2,13 +2,23 @@ import cv2
 import sys
 import math
 import numpy as np
+import RPi.GPIO as GPIO
+import time
 
-cap = cv2.VideoCapture("C:/Users/password - 1234/Downloads/video1.mp4")
+cap = cv2.VideoCapture(0)
+pin =18
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(pin, GPIO.OUT)
+p= GPIO.PWM(pin, 50)
+p.start(0)
+cnt = 0
 
 while (cap.isOpened()):
 
     ret, src = cap.read()
     src = cv2.resize(src, (640, 360))
+    src = cv2.flip(src,0)
+    src = cv2.flip(src,1)
     gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
     can = cv2.Canny(gray, 50, 200, None, 3)
 
@@ -59,13 +69,36 @@ while (cap.isOpened()):
         else:
             near_l = left[0]
             near_r = right[0]
+        time.sleep(1)
+
 
 
         print(near_l, near_r)
-
+        if near_l > 280:
+            p.ChangeDutyCycle(5.0)
+        else: pass
+        
+        if near_l < 280:
+            if near_r > 360:
+                p.ChangeDutyCycle(7.5)
+        else: pass
+        
+        if near_r < 360:
+            p.ChangeDutyCycle(10.0)
+        else: pass
+        
+            
+#         elif near_l < 280:
+#             if near_r > 360:
+#                 p.changeDutyCycle(7.5)
+#                 time.sleep(1)
+#         elif near < 360:
+#             p.changeDutyCycle(10.0)
+#             time.sleep(1)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
 cv2.destroyAllWindows()
+
