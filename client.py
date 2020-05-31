@@ -15,7 +15,7 @@ encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
 while True:
     ret, frame = cam.read()
     result, frame = cv2.imencode('.jpg', frame, encode_param)
-    data = n.array(frame)
+    data = np.array(frame)
     stringData = data.tostring()
 
     #(str(len(stringData))).encode().ljust(16)
