@@ -12,6 +12,7 @@ GPIO.setup(pin, GPIO.OUT)
 p= GPIO.PWM(pin, 50)
 p.start(0)
 cnt = 0
+state = ''
 
 while (cap.isOpened()):
 
@@ -69,36 +70,38 @@ while (cap.isOpened()):
         else:
             near_l = left[0]
             near_r = right[0]
-        time.sleep(1)
 
 
 
         print(near_l, near_r)
-        if near_l > 280:
-            p.ChangeDutyCycle(5.0)
-        else: pass
+
         
-        if near_l < 280:
-            if near_r > 360:
+        if near_l > 250:
+            if state == 'right':
+                pass
+            else:
+                state = 'right'
+                p.ChangeDutyCycle(4.5)
+        elif near_l < 280 | near_r > 360:
+            if state == 'straight':
+                pass
+            else:
+                state = 'straight'
                 p.ChangeDutyCycle(7.5)
+        elif near_r <390:
+            if state == 'left':
+                pass
+            else:
+                state = 'left'
+                p.ChangeDutyCycle(10.0)
         else: pass
-        
-        if near_r < 360:
-            p.ChangeDutyCycle(10.0)
-        else: pass
-        
             
-#         elif near_l < 280:
-#             if near_r > 360:
-#                 p.changeDutyCycle(7.5)
-#                 time.sleep(1)
-#         elif near < 360:
-#             p.changeDutyCycle(10.0)
-#             time.sleep(1)
+
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
+       
 cap.release()
 cv2.destroyAllWindows()
 
