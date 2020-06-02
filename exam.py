@@ -44,15 +44,14 @@ while (cap.isOpened()):
     if linesP is not None:
         left = []
         right = []
-        for i in range(0,len(linesP)):
+        for i in range(0, len(linesP)):
             if linesP[i][0][0] < 320:
-                left.append(linesP[i][0][0])
+                left.append(linesP[i][0])
             else:
-                right.append(linesP[i][0][0])
-        left = sorted(left, reverse=True)
-        right = sorted(right, reverse=False)
+                right.append(linesP[i][0])
 
-        # print(right)
+        left = sorted(left, key=itemgetter(1))[0]
+        right = sorted(right, key=itemgetter(3))[0]
 
         near_l = -1
         near_r = -1
@@ -61,7 +60,7 @@ while (cap.isOpened()):
             if len(right) == 0:
                 pass
             else:
-                near_r = right[0]
+                near_r = right[2]
         elif len(right) == 0:
             if len(left) == 0:
                 pass
@@ -69,9 +68,7 @@ while (cap.isOpened()):
                 near_l = left[0]
         else:
             near_l = left[0]
-            near_r = right[0]
-
-
+            near_r = right[2]
 
         print(near_l, near_r)
 
